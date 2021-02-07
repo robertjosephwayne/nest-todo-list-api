@@ -31,12 +31,11 @@ export class AppController {
 
   @Post('auth/signup')
   async signup(
-    @Body('username') username: string,
+    @Body('email') email: string,
     @Body('password') password: string,
   ) {
-    const user = { username, password };
-    console.log('Registering user: ', user);
-    return this.authService.register(user);
+    const user = { email, password };
+    return this.authService.signup(user);
   }
 
   @UseGuards(JwtAuthGuard)
