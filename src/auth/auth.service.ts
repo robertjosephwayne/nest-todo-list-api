@@ -13,7 +13,10 @@ export class AuthService {
 
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.usersRepository.findByEmail(username);
-    const isPasswordMatching = await bcrypt.compare(password, user.password);
+    let isPasswordMatching = false;
+    if (user) {
+      isPasswordMatching = await bcrypt.compare(password, user.password);
+    }
     if (user && isPasswordMatching) {
       const { password, ...result } = user;
       return result;
@@ -22,7 +25,8 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const userDoc = user._doc;
+    const payload = { username: userDoc.email, sub: userDoc._id };
     return {
       access_token: this.jwtService.sign(payload),
     };
