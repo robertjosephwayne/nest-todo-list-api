@@ -6,10 +6,8 @@ import { UsersRepository } from '../repositories/users.repository';
 export class UsersController {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  @Public()
   @Get()
   getUsers(): any {
-    // this.authService.signup();
     return this.usersRepository.findAll();
   }
 }
