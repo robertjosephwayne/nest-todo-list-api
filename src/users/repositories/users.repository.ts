@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ProjectsRepository } from 'src/projects/repositories/projects.repository';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { User, UserDocument } from '../schemas/user.schema';
 
@@ -9,6 +10,7 @@ export class UsersRepository {
   constructor(
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
+    private readonly projectsRepository: ProjectsRepository,
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -25,6 +27,10 @@ export class UsersRepository {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
+    this.projectsRepository.create({
+      name: 'Inbox',
+      user: createdUser._id,
+    });
     return createdUser.save();
   }
 }
