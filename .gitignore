@@ -34,4 +34,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 src/auth/constants.ts
 
-.vscode/settings.json
+/*.env
