@@ -12,8 +12,8 @@ import { TodosController } from './todos/controllers/todos.controller';
 
 @Module({
   imports: [
-    AuthModule,
     ConfigModule.forRoot(),
+    AuthModule,
     MongooseModule.forRoot(process.env.MONGO_URL, {
       port: process.env.MONGO_PORT,
     }),
