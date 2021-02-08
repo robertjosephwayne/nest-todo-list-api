@@ -32,7 +32,6 @@ export class TodosController {
     const project = await this.projectsRepository.findOne(projectId);
     const projectOwnerId = project.user;
     if (projectOwnerId != userId) {
-      console.log('projectOwnerId !== userId');
       throw new UnauthorizedException();
     } else {
       return this.todosRepository.create(createTodoDto);
@@ -45,14 +44,9 @@ export class TodosController {
     return this.todosRepository.findByUserId(userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.todosRepository.findOne(+id);
-  }
-
   @Put(':id')
   update(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto) {
-    return this.todosRepository.update(+id, updateTodoDto);
+    return this.todosRepository.update(id, updateTodoDto);
   }
 
   @Delete(':id')
