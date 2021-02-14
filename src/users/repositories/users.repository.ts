@@ -25,7 +25,7 @@ export class UsersRepository {
     return this.userModel.findOne({ email });
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto) {
     const createdUser = new this.userModel(createUserDto);
     this.projectsRepository.create({
       name: 'Inbox',

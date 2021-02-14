@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
@@ -33,12 +33,19 @@ export class AuthService {
   }
 
   async signup(createUserDto: CreateUserDto) {
+    const user = await this.usersRepository.findByEmail(createUserDto.email);
+    if (user) throw new ConflictException();
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     const createdUser = await this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
     });
-    const { password, ...result } = createdUser;
-    return result;
+    const payload = {
+      username: createdUser.email,
+      sub: createdUser._id,
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
